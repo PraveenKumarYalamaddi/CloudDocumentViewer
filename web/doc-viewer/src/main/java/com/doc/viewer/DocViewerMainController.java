@@ -63,7 +63,7 @@ DocViewerService docViewerService;
 		
 	}
 	
-	@RequestMapping(value = "/uploadfiletofolder/{folderName}",method =RequestMethod.POST)
+	@RequestMapping(value = "/uploadfiletofolder/{folderName}",method =RequestMethod.GET)
 	public String uploadFileToFolder(@PathVariable String folderName) {
 		String response = docViewerService.uploadFilesToFolder(folderName);
 		return response;

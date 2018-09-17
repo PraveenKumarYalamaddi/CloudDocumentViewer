@@ -6,7 +6,9 @@ import java.util.Scanner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -53,8 +55,11 @@ public class DocViewerService {
 		if(folderName == null) {
 			return "400 - Folder Name is Null";
 		}
-		HttpEntity<String> res = restTemplate.exchange((DocViewerUtil.endPoint("folder_contents")+folderName+file), HttpMethod.POST,entity,String.class);
-		String jsonRes = DocViewerUtil.toJson(res);
+		ResponseEntity<byte[]> resposnseEntity = restTemplate.exchange((DocViewerUtil.endPoint("folder_contents")+folderName+"/"+file.getAbsolutePath()), HttpMethod.POST,entity,byte[].class);
+		if(resposnseEntity.getStatusCode() == HttpStatus.OK) {
+			return "200 - File Uploaded";
+		}
+		String jsonRes = DocViewerUtil.toJson(resposnseEntity.getBody());
 		return jsonRes;
 	}
 

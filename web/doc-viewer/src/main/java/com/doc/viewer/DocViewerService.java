@@ -1,12 +1,8 @@
 package com.doc.viewer;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,25 +14,18 @@ import org.springframework.web.client.RestTemplate;
 public class DocViewerService {
 	
 	
-	public Response getFileDownloadFromFolder(String folName,String filename) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("Authorization", DocViewerUtil.endPoint("auth"));
-		if(filename == null) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-		File downloadFile;
-		if(folName == null) {
-			downloadFile = new File((DocViewerUtil.endPoint("file")+filename));
+	public String downloadFile(String folderName,String filename) throws IOException {
+		String downloadFile;
+		if(folderName == null) {
+			downloadFile = (DocViewerUtil.endPoint("file")+filename);
 		}else {
-			downloadFile = new File((DocViewerUtil.endPoint("file")+folName+"/"+filename));
+			downloadFile = (DocViewerUtil.endPoint("file")+folderName+"/"+filename);
 		}
-		ResponseBuilder response = Response.ok((Object) downloadFile);
-        response.header("Content-Disposition",("attachment; filename="+filename));
-		return response.build();
+		return downloadFile;
+		
 	}
 	
-	public String getFilesAndFoldersInAFolder(String folderName) {
+	public String getFilesAndFoldersInAFolder(String folderName	) {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);

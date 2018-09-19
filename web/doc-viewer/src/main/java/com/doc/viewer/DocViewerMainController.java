@@ -33,6 +33,14 @@ public class DocViewerMainController {
 @Autowired
 DocViewerService docViewerService;
 	
+	@RequestMapping()
+	@ResponseBody
+	public String defalutMethod() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Welcome to Document Viewer, Please read API documentaion for usage deatils.");
+		return sb.toString();
+	}
+
 	@RequestMapping(value = "/getfiledownloadfromfolder/{folderName}/{fileName}",method =RequestMethod.GET)
 	public @ResponseBody String downloadFile(@PathVariable String folderName ,@PathVariable String fileName,HttpServletResponse response) {
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();

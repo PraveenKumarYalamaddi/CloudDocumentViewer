@@ -3,7 +3,6 @@ package com.doc.viewer;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,13 +34,14 @@ public class DocViewerMainController {
 DocViewerService docViewerService;
 	
 	@RequestMapping(value = "/getfiledownloadfromfolder/{folderName}/{fileName}",method =RequestMethod.GET)
-	public @ResponseBody void downloadFile(@PathVariable String folderName ,@PathVariable String fileName,HttpServletResponse response) throws IOException {
+	public @ResponseBody String downloadFile(@PathVariable String folderName ,@PathVariable String fileName,HttpServletResponse response) {
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 		messageConverters.add(new ByteArrayHttpMessageConverter());
 		RestTemplate restTemplate = new RestTemplate(messageConverters);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("Authorization", DocViewerUtil.endPoint("auth"));
+		try {
 		String downloadFile = docViewerService.downloadFile(folderName,fileName);
 	    HttpEntity<String> entity = new HttpEntity<String>(headers);
 		ResponseEntity<byte[]> responseEntity = restTemplate.exchange(downloadFile, HttpMethod.GET,entity,byte[].class);
@@ -52,7 +52,12 @@ DocViewerService docViewerService;
 			response.setHeader("Content-Disposition", "attachment; filename="+fi.getName());
 			IOUtils.copy(inputStream, response.getOutputStream());
 	        response.flushBuffer();
-	        inputStream.close();	
+	        inputStream.close();
+	        return DocViewerUtil.toJson("200 - Requested File Downloaded");
+		}
+		return DocViewerUtil.toJson("Unkown Error try again");
+		}catch(Exception e) {
+			return DocViewerUtil.toJson("Unkown Error try again");
 		}
 	}
 	

@@ -19,10 +19,15 @@ public class DocViewerUtil {
 	private static final String FOLDER = "folder_contents";
 	private static final String AUTH = "auth";
 	
+	/**
+	 * This method will return End point for respective actions based on the key param.
+	 * @param key - This is used for generating end point.
+	 * @return Returns the end point URL.
+	 */
 	public static String endPoint(String key) {
 		switch (key) {
 		case FILE:
-			return BASE_URL+DOC_URL+FILE_URL;
+			return BASE_URL+FILE_URL;
 		case FOLDER:
 			return BASE_URL+DOC_URL+FOLDER_CONTENTS;
 		case AUTH:
@@ -33,6 +38,11 @@ public class DocViewerUtil {
 		
 	}
 	
+	/**
+	 * 
+	 * @param jsonObj - Object to convert json.
+	 * @return This will returns a json formatted output.
+	 */
 	public static String toJson(Object jsonObj) {
 		try {
 			Gson gson = new Gson();
@@ -42,6 +52,7 @@ public class DocViewerUtil {
 		}
 		return null;
 	}
+	
 	
 	public static <T> T fromJson(String json, Class<T> type) {
 		try {

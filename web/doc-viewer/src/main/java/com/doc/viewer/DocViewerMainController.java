@@ -81,4 +81,12 @@ DocViewerService docViewerService;
 		String response = docViewerService.uploadFilesToFolder(folderName);
 		return response;
 	}
+	
+	@RequestMapping("*")
+	@ResponseBody
+	public String fallbackMethod() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Oops! Something went wrong with the API , Please read API document for further information");
+		return sb.toString();
+	}
 }

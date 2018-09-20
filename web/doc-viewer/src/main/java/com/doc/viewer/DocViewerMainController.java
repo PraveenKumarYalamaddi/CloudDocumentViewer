@@ -10,11 +10,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +42,11 @@ DocViewerService docViewerService;
 	public String defalutMethod() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Welcome to Document Viewer, Please read API documentaion for usage deatils.");
-		return sb.toString();
+		return DocViewerUtil.toJson(sb);
 	}
 
-	@RequestMapping(value = "/getfiledownloadfromfolder/{folderName}/{fileName}",method =RequestMethod.GET)
+	@GET
+	@RequestMapping(value = "/getfiledownloadfromfolder/{folderName}/{fileName}")
 	public @ResponseBody String downloadFile(@PathVariable String folderName ,@PathVariable String fileName,HttpServletResponse response) {
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 		messageConverters.add(new ByteArrayHttpMessageConverter());
@@ -69,14 +74,16 @@ DocViewerService docViewerService;
 		}
 	}
 	
-	@RequestMapping(value = "/getfileandfoldersinsidefolder/{folderName}",method =RequestMethod.GET)
+	@GET
+	@RequestMapping(value = "/getfileandfoldersinsidefolder/{folderName}")
 		public String getFileAndFoldersInsideFolder(@PathVariable String folderName) {
 			String response = docViewerService.getFilesAndFoldersInAFolder(folderName);
 			return response;
 		
 	}
 	
-	@RequestMapping(value = "/uploadfiletofolder/{folderName}",method =RequestMethod.GET)
+	@POST
+	@RequestMapping(value = "/uploadfiletofolder/{folderName}")
 	public String uploadFileToFolder(@PathVariable String folderName) {
 		String response = docViewerService.uploadFilesToFolder(folderName);
 		return response;
@@ -87,6 +94,6 @@ DocViewerService docViewerService;
 	public String fallbackMethod() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Oops! Something went wrong with the API , Please read API document for further information");
-		return sb.toString();
+		return DocViewerUtil.toJson(sb);
 	}
 }
